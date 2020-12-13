@@ -13,7 +13,7 @@ def store(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
         items: []
         cartItems = order['get_cart_items']
 
@@ -28,7 +28,7 @@ def cart(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        order = {'get_cart_total': 0, 'get_cart_items': 0,}# for non-login user
+        order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}# for non-login user
         items = []
         cartItems = order['get_cart_items']
 
@@ -42,7 +42,7 @@ def checkout(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
+        order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
         items: []
         cartItems = order['get_cart_items']
 
