@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 from .models import *
-from .utils import cartData
+from .utils import cookieCart, cartData
 
 # Create your views here.
 def store(request):
@@ -67,27 +67,53 @@ def process_order(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = float(data['form']['total'])
-        order.transaction_id = transaction_id
-
-        #prevent user manipulate data at frontend
-        print(total, order.get_cart_total)
-        if total == float(order.get_cart_total):
-            order.complete = True
-        order.save()
-
-        if order.shipping == True:
-            ShippingAddress.objects.create(
-                customer = customer,
-                order = order,
-                address = data['shipping']['address'],
-                city = data['shipping']['city'],
-                state = data['shipping']['state'],
-                zipcode = data['shipping']['zipcode']
-            )
     else:
-        pass
-    
+        name = data['form']['name']
+        email = data['form']['email']
+
+        cookieData = cookieCart(request)
+        items = cookieData['items']
+
+        customer, created = Customer.objects.get_or_create(
+            email=email
+        )
+        
+        customer.name = name
+        customer.save()
+
+        order = Order.objects.create(
+            customer=customer,
+            complete=False
+        )
+
+        for item in items:
+            product = Product.objects.get(id=item['product']['id'])
+            orderItem = OrderItem.objects.create(
+                product=product,
+                order=order,
+                quantity=item['quantity']
+            )
+
+    # checkout process
+    total = float(data['form']['total'])
+    order.transaction_id = transaction_id
+
+    # prevent user manipulate data at frontend
+    if total == float(order.get_cart_total):
+        order.complete = True
+    order.save()
+
+    # create ShippingAddress instance,if it needs shipping
+    if order.shipping == True:
+        ShippingAddress.objects.create(
+            customer = customer,
+            order = order,
+            address = data['shipping']['address'],
+            city = data['shipping']['city'],
+            state = data['shipping']['state'],
+            zipcode = data['shipping']['zipcode']
+        )
+
     return JsonResponse('Payment complete', safe=False)
 
 
