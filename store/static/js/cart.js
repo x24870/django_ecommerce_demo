@@ -10,7 +10,28 @@ for(let i=0; i<updateBtns.length; i++){
     if(user === 'AnonymousUser'){
       console.log('not login');
     }else{
-      console.log('sending data...');
+      updateUserOrder(productId, action);
     }
   })
+}
+
+function updateUserOrder(productId, action){
+  console.log('sending data...');
+
+  const url = '/update_item/';
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({'productId': productId, 'action': action})
+  })
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    console.log(`Data: ${data}`);
+  })
+
 }
