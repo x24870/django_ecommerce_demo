@@ -6,6 +6,7 @@
   <div class="col-lg-6">
     <div class="box-element" id="form-wrapper">
       <form id="form">
+        {% csrf_token %}
         <div id="user-info">
           <div class="form-field">
             <input required type="text" class="form-control" name="name" placeholder="Name...">
@@ -91,6 +92,9 @@
 // 
 
   const form = document.getElementById('form');
+  //fix incognito mode don't generate CSRFToken issue
+  csrftoken = form.getElementsByTagName('input')[0].value;
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     console.log('Form submitted');
