@@ -45,7 +45,8 @@
     <br>
     <div class="box-element hidden" id="payment-info">
       <small>Paypal Options</small>
-      <button class="btn btn-outline-success" id="make-payment">Make Payment</button>
+      <div id="paypal-button-container"></div>
+      <!-- <button class="btn btn-outline-success" id="make-payment">Make Payment</button> -->
     </div>
   </div>
 
@@ -70,6 +71,37 @@
   </div>
 </div>
 
+<!-- paypal scripts -->
+<script
+src="https://www.paypal.com/sdk/js?client-id=AUNzXMQBOgWhOVwA2EvW1SsgFFXZHPmR9dMMDvnhlIifEPM4wDEWYn5r-_MLPhx1sIR4UVGY8OYvLnat"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+</script>
+<script>
+  // This function displays Smart Payment Buttons on your web page.
+  paypal.Buttons(
+    {
+    //setup transaction
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: '0.01'
+          }
+        }]
+      });
+    },
+
+    //Finalize the transaction
+    onApprove: function(data, actions){
+      return actions.order.capture().then(function(details){
+        //show a success message to the buyer
+        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+      });
+    }
+  }
+  ).render('#paypal-button-container');
+</script>
+
+<!-- checkout scripts -->
 <script type="text/javascript">
   const shipping = '{{ order.shipping }}';
   const total = '{{ order.get_cart_total }}';
@@ -102,9 +134,9 @@
     document.getElementById('payment-info').classList.remove('hidden');
   });
 
-  document.getElementById('make-payment').addEventListener('click', function(e){
-    submitFormData()
-  });
+  // document.getElementById('make-payment').addEventListener('click', function(e){
+  //   submitFormData()
+  // });
 
   function submitFormData(){
     console.log('payment button clicked');
