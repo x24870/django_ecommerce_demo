@@ -11,7 +11,7 @@ SECRET_KEY = env(
     default="tLFGLBhy2H9gNOAsXy21tCoJtBe7WeOZNA1QYvp0L5q0Vj6wbEEmhr5yAUckdK2N",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "pyk-ecommerce.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", ".pyk-ecommerce.herokuapp.com"]
 
 # CACHES
 # ------------------------------------------------------------------------------
