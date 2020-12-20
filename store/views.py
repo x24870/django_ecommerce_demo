@@ -3,6 +3,7 @@ import datetime
 
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
@@ -16,6 +17,10 @@ def store(request):
     items = data['items']
 
     products = Product.objects.all()
+    query = request.GET.get('q')
+    if query:
+        products = products.filter(Q(name__icontains=query)).distinct()
+
     context = {'products': products, 'cartItems': cartItems}
     return render(request, 'store/store.html', context=context)
 
