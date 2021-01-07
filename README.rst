@@ -20,7 +20,8 @@ Tech stack
 Heroku
 ^^^^^^
 
-This demo project deployed on Heroku:
+This demo project deployed on Heroku(It may take 20 sec to awake a free dyno):
+
 https://pyk-ecommerce.herokuapp.com/
 
 
